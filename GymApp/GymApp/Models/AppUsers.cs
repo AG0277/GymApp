@@ -1,13 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GymApp.Models
 {
-    public class AppUser
+    public class AppUser : IdentityUser
     {
-        [Key]
-        public int UserId { get; set; }
-        public string Name { get; set; }
-        public string LastName { get; set; }
+
+        [ForeignKey("Adress")]
+        public int AdressId { get; set; }
         public ICollection<Meal> Meal { get; set; }
 
     }

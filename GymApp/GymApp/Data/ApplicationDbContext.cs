@@ -1,10 +1,11 @@
 ﻿using GymApp.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
 
 namespace GymApp.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<AppUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options): base(options)
         {
@@ -17,6 +18,7 @@ namespace GymApp.Data
         public DbSet<MealProduct> MealProducts { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<MealProduct>().HasKey(mp => new { mp.MealId, mp.ProductId });
             modelBuilder.Entity<MealProduct>()
                 .HasOne(m => m.Meal)

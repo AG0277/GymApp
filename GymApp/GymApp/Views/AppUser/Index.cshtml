@@ -17,18 +17,9 @@
     </thead>
     
     <tbody>
-        @foreach(var obj in Model.OrderBy(u=>u.UserId))
+        @foreach(var obj in Model)
         {
         <tr>
-            <td>
-                @obj.UserId
-            </td>
-            <td>
-                    @obj.Name
-            </td>
-            <td>
-                    @obj.LastName
-            </td>
         </tr>
         }
     </tbody>
