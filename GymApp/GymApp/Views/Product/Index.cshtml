@@ -1,66 +1,84 @@
 ﻿@model List<Product>
 
+<style>
+    .icon-size {
+        font-size: 20px;
+        margin-right: 10px;
+    }
+</style>
 <div class=" container">
-    <div class="row"
+    <div class="row">
         <div class="col">
             <h1 class="text-primary">
                 Products
             </h1>
         </div>
         <div class="row text-end">
-            <a asp-controller="Product" asp-action="Create" class="btn btn-primary size" >
+            <a asp-controller="Product" asp-action="Create" class="btn btn-primary">
                 Add New Product
             </a>
         </div>
     </div>
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>
-                Product Id
-            </th>
-            <th>
-                Product Name
-            </th>
-            <th>
-                kcal
-            </th>
-            <th>
-                protein
-            </th>
-            <th>
-                carbs
-            </th>
-            <th>
-                fat
-            </th>
-        </tr>
-    </thead>
+    <div class="row">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        Product Name
+                    </th>
+                    <th>
+                        kcal
+                    </th>
+                    <th>
+                        protein
+                    </th>
+                    <th>
+                        carbs
+                    </th>
+                    <th>
+                        fat
+                    </th>
+                    <th>
+                        grams
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
 
-    <tbody>
-        @foreach (var obj in Model.OrderBy(u => u.ProductId))
-        {
-            <tr>
-                <td>
-                    @obj.ProductId
-                </td>
-                <td>
-                    @obj.ProductName
-                </td>
-                <td>
-                    @obj.kcal
-                </td>
-                <td>
-                    @obj.protein
-                </td>
-                <td>
-                    @obj.carbs
-                </td>
-                <td>
-                    @obj.fat
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+            <tbody>
+                @foreach (var obj in Model.OrderBy(u => u.ProductId))
+                {
+                    <tr>
+                        <td>
+                            @obj.ProductName
+                        </td>
+                        <td>
+                            @obj.kcal
+                        </td>
+                        <td>
+                            @obj.protein
+                        </td>
+                        <td>
+                            @obj.carbs
+                        </td>
+                        <td>
+                            @obj.fat
+                        </td>
+                        <td>
+                            @obj.grams
+                        </td>
+                        <td class="text-nowrap" style="width:4%">
+                            <a asp-controller="Product" asp-action="Edit" class="icon-link">
+                                <i class="bi bi-pencil-square icon-size"></i>
+                            </a>
+                            <a asp-controller="Product" asp-action="Delete" class="icon-link">
+                                <i class="bi bi-trash3-fill icon-size"></i>
+                            </a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>

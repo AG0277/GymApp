@@ -24,10 +24,25 @@ namespace GymApp.Controllers
         [HttpPost]
         public IActionResult Create(Product obj)
         {
-            obj.ProductName = obj.ProductName.ToLower();
             if (ModelState.IsValid)
             {
                 _db.Products.Add(obj);
+                _db.SaveChanges();
+                return RedirectToAction("Index", "Product");
+            }
+            return View();
+        }
+
+        public IActionResult Delete()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Delete(Product obj)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.Products.Remove(obj);
                 _db.SaveChanges();
                 return RedirectToAction("Index", "Product");
             }
