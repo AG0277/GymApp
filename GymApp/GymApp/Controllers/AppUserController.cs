@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GymApp.Controllers
 {
-    public class UserController : Controller
+    public class AppUserController : Controller
     {
         private readonly ApplicationDbContext _db;
-        public UserController(ApplicationDbContext db)
+        public AppUserController(ApplicationDbContext db)
         {
             _db = db;
         }

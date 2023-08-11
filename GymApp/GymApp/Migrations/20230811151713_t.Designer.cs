@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230801172933_add identity")]
-    partial class addidentity
+    [Migration("20230811151713_t")]
+    partial class t
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -46,19 +46,11 @@ namespace GymApp.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -102,11 +94,8 @@ namespace GymApp.Migrations
 
             modelBuilder.Entity("GymApp.Models.Meal", b =>
                 {
-                    b.Property<int>("MealId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MealId"), 1L, 1);
+                    b.Property<string>("MealId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MealName")
                         .IsRequired()
@@ -118,6 +107,9 @@ namespace GymApp.Migrations
 
                     b.Property<float>("carbs")
                         .HasColumnType("real");
+
+                    b.Property<DateTime>("date")
+                        .HasColumnType("datetime2");
 
                     b.Property<float>("fat")
                         .HasColumnType("real");
@@ -140,11 +132,11 @@ namespace GymApp.Migrations
 
             modelBuilder.Entity("GymApp.Models.MealProduct", b =>
                 {
-                    b.Property<int>("MealId")
-                        .HasColumnType("int");
+                    b.Property<string>("MealId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                    b.Property<string>("ProductId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MealName")
                         .IsRequired()
@@ -159,11 +151,8 @@ namespace GymApp.Migrations
 
             modelBuilder.Entity("GymApp.Models.Product", b =>
                 {
-                    b.Property<int>("ProductId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"), 1L, 1);
+                    b.Property<string>("ProductId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProductName")
                         .IsRequired()

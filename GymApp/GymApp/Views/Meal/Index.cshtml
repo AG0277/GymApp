@@ -1,4 +1,5 @@
-﻿@model List<Product>
+﻿@using GymApp.Models
+@model List<Meal>
 
 <style>
     .icon-size {
@@ -10,12 +11,12 @@
     <div class="row">
         <div class="col">
             <h1 class="text-primary">
-                Products
+                Meals
             </h1>
         </div>
         <div class="row text-end">
-            <a asp-controller="Product" asp-action="Create" class="btn btn-primary">
-                Add New Product
+            <a asp-controller="Meal" asp-action="Create" class="btn btn-primary">
+                Add New Meal
             </a>
         </div>
     </div>
@@ -41,16 +42,19 @@
                     <th>
                         grams
                     </th>
+                    <th>
+                        date
+                    </th>
                     <th></th>
                 </tr>
             </thead>
 
             <tbody>
-                @foreach (var obj in Model.OrderBy(u => u.ProductId))
+                @foreach (var obj in Model.OrderBy(u => u.MealName))
                 {
                     <tr>
                         <td>
-                            @obj.ProductName
+                            @obj.MealName
                         </td>
                         <td>
                             @obj.kcal
@@ -67,11 +71,14 @@
                         <td>
                             @obj.grams
                         </td>
+                        <td>
+                            @obj.date
+                        </td>
                         <td class="text-nowrap" style="width:4%">
-                            <a asp-controller="Product" asp-action="Edit" asp-route-ProductId="@obj.ProductId" class="icon-link">
+                            <a asp-controller="Product" asp-action="Edit" asp-route-ProductId="@obj.MealId" class="icon-link">
                                 <i class="bi bi-pencil-square icon-size"></i>
                             </a>
-                            <a asp-controller="Product" asp-action="Delete" asp-route-ProductId="@obj.ProductId" class="icon-link">
+                            <a asp-controller="Product" asp-action="Delete" asp-route-ProductId="@obj.MealId" class="icon-link">
                                 <i class="bi bi-trash3-fill icon-size"></i>
                             </a>
 

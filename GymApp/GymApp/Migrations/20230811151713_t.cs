@@ -4,7 +4,7 @@
 
 namespace GymApp.Migrations
 {
-    public partial class login : Migration
+    public partial class t : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

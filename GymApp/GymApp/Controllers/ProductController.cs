@@ -30,23 +30,51 @@ namespace GymApp.Controllers
                 _db.SaveChanges();
                 return RedirectToAction("Index", "Product");
             }
+
             return View();
         }
 
-        public IActionResult Delete()
+        public async Task<IActionResult> Edit(string ProductId)
         {
-            return View();
+            Product? productdb = await _db.Products.FindAsync(ProductId);
+            
+            if(productdb == null)
+            {
+                return NotFound();
+            }
+
+            return View(productdb);
         }
         [HttpPost]
-        public IActionResult Delete(Product obj)
+        public IActionResult Edit(Product obj)
         {
             if (ModelState.IsValid)
             {
-                _db.Products.Remove(obj);
+                _db.Products.Update(obj);
                 _db.SaveChanges();
                 return RedirectToAction("Index", "Product");
             }
             return View();
+        }
+
+        public async Task<IActionResult> Delete(string ProductId)
+        {
+            Product? productdb = await _db.Products.FindAsync(ProductId);
+
+            if (productdb == null)
+            {
+                return NotFound();
+            }
+
+            return View(productdb);
+        }
+        [HttpPost]
+        public IActionResult Delete(Product obj)
+        {
+            _db.Products.Remove(obj);
+            _db.SaveChanges();
+            return RedirectToAction("Index", "Product");
+            
         }
     }
 }

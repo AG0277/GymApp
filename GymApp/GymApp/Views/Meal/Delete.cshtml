@@ -1,0 +1,39 @@
+﻿@model Product
+
+<form method="post">
+    <input asp-for="ProductId" hidden />
+    <div class="border p-3 mt-4">
+        <div class="row">
+            <h2 class="text-primary">
+                Delete Product
+            </h2>
+            <hr />
+        </div>
+        <div class="mb-3">
+            <label asp-for="ProductName"></label>
+            <input asp-for="ProductName" disabled type="text" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="kcal"></label>
+            <input asp-for="kcal" disabled type="text" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="protein"></label>
+            <input asp-for="protein" disabled type="text" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="fat"></label>
+            <input asp-for="fat" disabled type="text" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="carbs"></label>
+            <input asp-for="carbs" disabled type="text" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="grams"></label>
+            <input asp-for="grams" disabled type="text" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-danger" style="width:150px" >Delete</button>
+        <a asp-controller="Product" asp-action="Index" class="btn btn-primary">Back to the list</a>
+    </div>
+</form>

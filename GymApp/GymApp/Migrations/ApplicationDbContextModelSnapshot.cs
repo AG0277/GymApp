@@ -92,11 +92,8 @@ namespace GymApp.Migrations
 
             modelBuilder.Entity("GymApp.Models.Meal", b =>
                 {
-                    b.Property<int>("MealId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MealId"), 1L, 1);
+                    b.Property<string>("MealId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MealName")
                         .IsRequired()
@@ -108,6 +105,9 @@ namespace GymApp.Migrations
 
                     b.Property<float>("carbs")
                         .HasColumnType("real");
+
+                    b.Property<DateTime>("date")
+                        .HasColumnType("datetime2");
 
                     b.Property<float>("fat")
                         .HasColumnType("real");
@@ -130,11 +130,11 @@ namespace GymApp.Migrations
 
             modelBuilder.Entity("GymApp.Models.MealProduct", b =>
                 {
-                    b.Property<int>("MealId")
-                        .HasColumnType("int");
+                    b.Property<string>("MealId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                    b.Property<string>("ProductId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MealName")
                         .IsRequired()
@@ -149,11 +149,8 @@ namespace GymApp.Migrations
 
             modelBuilder.Entity("GymApp.Models.Product", b =>
                 {
-                    b.Property<int>("ProductId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"), 1L, 1);
+                    b.Property<string>("ProductId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProductName")
                         .IsRequired()

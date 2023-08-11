@@ -11,7 +11,9 @@ namespace GymApp.Models
         {
             MealProducts = new List<MealProduct>();
         }
-        [Key] public int ProductId { get; set; }
+
+        [Key] 
+        public string? ProductId { get; set; }
         [DisplayName("Product Name")]
         public string ProductName { get; set; }
         [Range(0f, float.MaxValue, ErrorMessage = "Kcal must be positive")]

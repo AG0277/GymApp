@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GymApp.Migrations
 {
-    public partial class addidentity : Migration
+    public partial class initdatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,8 +28,6 @@ namespace GymApp.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AdressId = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -55,8 +53,7 @@ namespace GymApp.Migrations
                 name: "Products",
                 columns: table => new
                 {
-                    ProductId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     kcal = table.Column<float>(type: "real", nullable: false),
                     protein = table.Column<float>(type: "real", nullable: false),
@@ -179,14 +176,14 @@ namespace GymApp.Migrations
                 name: "Meals",
                 columns: table => new
                 {
-                    MealId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MealId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     MealName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     kcal = table.Column<float>(type: "real", nullable: false),
                     protein = table.Column<float>(type: "real", nullable: false),
                     carbs = table.Column<float>(type: "real", nullable: false),
                     fat = table.Column<float>(type: "real", nullable: false),
                     grams = table.Column<float>(type: "real", nullable: false),
+                    date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -204,8 +201,8 @@ namespace GymApp.Migrations
                 name: "MealProducts",
                 columns: table => new
                 {
-                    MealId = table.Column<int>(type: "int", nullable: false),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    MealId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProductId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     MealName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>

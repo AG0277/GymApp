@@ -32,7 +32,7 @@ namespace GymApp.Data
                         EmailConfirmed = true,
 
                     };
-                    await userManager.CreateAsync(newAdminUser, "Coding@1234?");
+                    await userManager.CreateAsync(newAdminUser, "Test1234!@#?");
                     await userManager.AddToRoleAsync(newAdminUser, UserRoles.Admin);
                 }
 

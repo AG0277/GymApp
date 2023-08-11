@@ -2,8 +2,8 @@
 {
     public class MealProduct
     {
-        public int MealId { get; set; }
-        public int ProductId { get; set; }
+        public string MealId { get; set; }
+        public string ProductId { get; set; }
 
         public string MealName { get; set; }
 

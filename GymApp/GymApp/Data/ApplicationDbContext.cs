@@ -19,6 +19,14 @@ namespace GymApp.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Product>()
+                .Property(p => p.ProductId)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Meal>()
+                .Property(p => p.MealId)
+                .ValueGeneratedOnAdd();
+
             modelBuilder.Entity<MealProduct>().HasKey(mp => new { mp.MealId, mp.ProductId });
             modelBuilder.Entity<MealProduct>()
                 .HasOne(m => m.Meal)
