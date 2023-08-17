@@ -1,5 +1,8 @@
 ﻿using GymApp.Data;
 using GymApp.Models;
+using GymApp.ViewModels;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymApp.Controllers
@@ -8,16 +11,22 @@ namespace GymApp.Controllers
     {
         private readonly ApplicationDbContext _db;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public MealController(ApplicationDbContext db, IHttpContextAccessor httpContextAccessor)
+        private readonly UserManager<AppUser> _userManager;
+        public MealController(ApplicationDbContext db, IHttpContextAccessor httpContextAccessor, UserManager<AppUser> userManager)
         {
             _httpContextAccessor = httpContextAccessor;
             _db = db;
+            _userManager = userManager;
         }
         public IActionResult Index()
         {
-            var currentUser = _httpContextAccessor.HttpContext.User;
-            var userMeals = _db.Meals.Where(r => r.User.Id == currentUser.ToString());
-            return View(userMeals.ToList());
+            var currentUser = _httpContextAccessor.HttpContext.User.GetUserID();
+            var userMeals = _db.Meals.Where(r => r.User.Id == currentUser.ToString()).ToList();
+            var mealViewModel = new MealViewModel()
+            {
+                Meals = userMeals
+            };
+            return View(mealViewModel);
         }
 
         public IActionResult Create()
@@ -25,9 +34,15 @@ namespace GymApp.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Meal obj)
+        public async Task<IActionResult> Create(Meal obj)
         {
-            
+            var user = await _userManager.GetUserAsync(User);
+            if (user != null)
+            {
+                obj.User = user;
+                ModelState.Remove("User");
+                ModelState.Remove("MealId");
+            }
             obj.date = DateTime.Now;
 
             if (ModelState.IsValid)

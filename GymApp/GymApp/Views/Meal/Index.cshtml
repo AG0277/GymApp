@@ -1,5 +1,5 @@
-﻿@using GymApp.Models
-@model List<Meal>
+﻿@using GymApp.ViewModels
+@model MealViewModel
 
 <style>
     .icon-size {
@@ -50,7 +50,7 @@
             </thead>
 
             <tbody>
-                @foreach (var obj in Model.OrderBy(u => u.MealName))
+                @foreach (var obj in Model.Meals)
                 {
                     <tr>
                         <td>

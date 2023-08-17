@@ -24,7 +24,7 @@ namespace GymApp.Models
         public float carbs { get; set; }
         [Range(0f, float.MaxValue, ErrorMessage = "Fat must be positive")]
         public float fat { get; set; }
-        [Range(0f, float.MaxValue, ErrorMessage = "Fat must be positive")]
+        [Range(0f, float.MaxValue, ErrorMessage = "Grams must be positive")]
         public float grams { get; set; }
         public ICollection<MealProduct> MealProducts { get; set; }
     }
