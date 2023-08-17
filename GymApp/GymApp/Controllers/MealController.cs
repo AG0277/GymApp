@@ -4,6 +4,7 @@ using GymApp.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GymApp.Controllers
 {
@@ -28,7 +29,12 @@ namespace GymApp.Controllers
             };
             return View(mealViewModel);
         }
+        public async Task<IActionResult> Search(string query)
+        {
+            var searchResults = await _db.Products.Where(r => r.ProductName.Contains(query)).ToListAsync();
 
+            return PartialView("SearchResultsPartial", searchResults);
+        }
         public IActionResult Create()
         {
             return View();

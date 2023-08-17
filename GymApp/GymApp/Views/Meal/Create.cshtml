@@ -4,7 +4,7 @@
     <div class="border p-3 mt-4">
         <div class="row">
             <h2 class="text-primary">
-                Add New Meal
+                Create New Meal
             </h2>
             <hr/>
         </div>
@@ -42,3 +42,8 @@
         <a asp-controller="Meal" asp-action="Index" class="btn btn-primary">Back to the list</a>
     </div>
 </form>
+<script src="~/js/SearchProduct.js"></script>
+<form>
+    <input type="text" id="searchQuery" placeholder="Search..." oninput="searchProducts()" />
+</form>
+<div id="searchResults"></div>
