@@ -1,8 +1,9 @@
 ﻿@model List<Product>
 
-<ul>
+<select id="searchResultsDropdown">
+    <option value="">Select a product...</option>
     @foreach (var result in Model)
     {
-        <li>@result.ProductName</li>
+        <option value="@result.ProductId">@result.ProductName</option>
     }
-</ul>
+</select>

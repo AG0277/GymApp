@@ -4,7 +4,9 @@ using GymApp.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace GymApp.Controllers
 {
@@ -29,16 +31,28 @@ namespace GymApp.Controllers
             };
             return View(mealViewModel);
         }
-        public async Task<IActionResult> Search(string query)
-        {
-            var searchResults = await _db.Products.Where(r => r.ProductName.Contains(query)).ToListAsync();
 
-            return PartialView("SearchResultsPartial", searchResults);
+        public IActionResult GetProductAttributes(string productId)
+        {
+            // Retrieve product attributes based on the productId
+            var productAttributes = _db.Products.FirstOrDefault(p => p.ProductId == productId);
+
+            return Json(productAttributes);
+        }
+        public IActionResult SearchBar(string query)
+        {
+            var searchResults = _db.Products
+                .Where(r => r.ProductName.Contains(query))
+                .Select(r => new { r.ProductId, r.ProductName })
+                .ToList();
+
+            return Json(searchResults);
         }
         public IActionResult Create()
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Create(Meal obj)
         {

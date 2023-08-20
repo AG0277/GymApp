@@ -7,15 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\js\SearchProduct.js" />
+    <Content Remove="wwwroot\js\SearchBar.js" />
   </ItemGroup>
 
   <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\js\SearchProduct.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\SearchBar.js" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\js\SearchProduct.js" />
+    <None Include="wwwroot\js\SearchBar.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +27,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
 </Project>

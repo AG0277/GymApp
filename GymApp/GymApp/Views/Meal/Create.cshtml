@@ -1,49 +1,15 @@
-﻿@model Meal
+﻿@model List<Product>
+@{
+    ViewData["Title"] = "Dynamic Autocomplete Search";
+}
+<div id="searchBar">
+    <input type="text" id="searchInput" placeholder="Search products..." />
+    <div id="searchResults"></div>
+</div>
+<div id="productAttributes"></div>
 
-<form method="post">
-    <div class="border p-3 mt-4">
-        <div class="row">
-            <h2 class="text-primary">
-                Create New Meal
-            </h2>
-            <hr/>
-        </div>
-        <div class="mb-3">
-            <label asp-for="MealName"></label>
-            <input asp-for="MealName" type="text" class="form-control" />
-            <span asp-validation-for="MealName" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="kcal"></label>
-            <input asp-for="kcal" type="text" class="form-control" />
-            <span asp-validation-for="kcal" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="protein"></label>
-            <input asp-for="protein" type="text" class="form-control" />
-            <span asp-validation-for="protein" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="fat"></label>
-            <input asp-for="fat" type="text" class="form-control" />
-            <span asp-validation-for="fat" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="carbs"></label>
-            <input asp-for="carbs" type="text" class="form-control" />
-            <span asp-validation-for="carbs" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="grams"></label>
-            <input asp-for="grams" type="text" class="form-control" />
-            <span asp-validation-for="grams" class="text-danger"></span>
-        </div>
-        <button type="submit" class="btn btn-primary" style="width:150px">Confirm</button>
-        <a asp-controller="Meal" asp-action="Index" class="btn btn-primary">Back to the list</a>
-    </div>
-</form>
-<script src="~/js/SearchProduct.js"></script>
-<form>
-    <input type="text" id="searchQuery" placeholder="Search..." oninput="searchProducts()" />
-</form>
-<div id="searchResults"></div>
+@section Scripts {
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/js/SearchBar.js"></script>
+<script src="~/js/productDetails.js"></script>
+}
