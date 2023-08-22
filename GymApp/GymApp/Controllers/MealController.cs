@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Nancy.Json;
 using Newtonsoft.Json;
 
 namespace GymApp.Controllers
@@ -15,12 +16,31 @@ namespace GymApp.Controllers
         private readonly ApplicationDbContext _db;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<AppUser> _userManager;
+        private List<MealProductViewModel> MealProductsVM;
+        private MealSummaryViewModel _MealSummaryVM;
+
         public MealController(ApplicationDbContext db, IHttpContextAccessor httpContextAccessor, UserManager<AppUser> userManager)
         {
             _httpContextAccessor = httpContextAccessor;
             _db = db;
             _userManager = userManager;
+            MealProductsVM= new List<MealProductViewModel>();
+            _MealSummaryVM = new MealSummaryViewModel();
+
+
+            var serializedMealProduct = _httpContextAccessor.HttpContext.Session.GetString("MealProduct");
+            if (!string.IsNullOrEmpty(serializedMealProduct))
+            {
+                MealProductsVM = JsonConvert.DeserializeObject<List<MealProductViewModel>>(serializedMealProduct);
+            }
+
+            var serializedMealSummary = _httpContextAccessor.HttpContext.Session.GetString("MealSummary");
+            if (!string.IsNullOrEmpty(serializedMealSummary))
+            {
+                _MealSummaryVM = JsonConvert.DeserializeObject<MealSummaryViewModel>(serializedMealSummary);
+            }
         }
+
         public IActionResult Index()
         {
             var currentUser = _httpContextAccessor.HttpContext.User.GetUserID();
@@ -32,13 +52,35 @@ namespace GymApp.Controllers
             return View(mealViewModel);
         }
 
-        public IActionResult GetProductAttributes(string productId)
+        public IActionResult AddProductsToMeal(string productId)
         {
-            // Retrieve product attributes based on the productId
             var productAttributes = _db.Products.FirstOrDefault(p => p.ProductId == productId);
+
+            var mealProduct = new MealProductViewModel
+            {
+                ProductId = productId,
+                ProductGrams = productAttributes.grams
+            };
+
+            MealProductsVM.Add(mealProduct);
+            var serializedMealProduct = JsonConvert.SerializeObject(MealProductsVM);
+            _httpContextAccessor.HttpContext.Session.SetString("MealProducts", serializedMealProduct);
+
+
+            _MealSummaryVM.AddProduct(productAttributes);
+            var serializedMealSummary = JsonConvert.SerializeObject(_MealSummaryVM);
+            _httpContextAccessor.HttpContext.Session.SetString("MealSummary", serializedMealSummary);
+
 
             return Json(productAttributes);
         }
+
+        public IActionResult UpdateSummary()
+        {
+            return Json(_MealSummaryVM);
+        }
+
+
         public IActionResult SearchBar(string query)
         {
             var searchResults = _db.Products
@@ -48,14 +90,18 @@ namespace GymApp.Controllers
 
             return Json(searchResults);
         }
+
         public IActionResult Create()
         {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            ViewData["MealSummary"] = serializer.Serialize(_MealSummaryVM);
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(Meal obj)
         {
+
             var user = await _userManager.GetUserAsync(User);
             if (user != null)
             {

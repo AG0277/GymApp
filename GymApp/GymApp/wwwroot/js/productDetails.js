@@ -3,23 +3,45 @@
     var productId = $(this).data('productid');
 
     $.ajax({
-        url: '/Meal/GetProductAttributes?productId=' + productId,
+        url: '/Meal/AddProductsToMeal?productId=' + productId,
         data: { productId: productId },
         dataType: 'json',
         success: function (productAttributes) {
-            var productAttributesDiv = $('#productAttributes');
-            productAttributesDiv.empty();
+            $('#searchInput').val('Search products...')
+            $('#searchInput').on('focus', function () {
+                if ($(this).val() === 'Search products...') {
+                    $(this).val('');
+                }
+            });
+            var row = $('<tr>');
+            row.append('<td>' + productAttributes.productName + '</td>');
+            row.append('<td>' + productAttributes.kcal + '</td>');
+            row.append('<td>' + productAttributes.protein + '</td>');
+            row.append('<td>' + productAttributes.carbs + '</td>');
+            row.append('<td>' + productAttributes.fat + '</td>');
+            row.append('<td>' + productAttributes.grams + '</td>');
+            $('#ProductTable').append(row);
 
-            var attributesList = $('<ul>');
-            attributesList.append('<li>Name: ' + productAttributes.productName + '</li>');
-            attributesList.append('<li>Kcal: ' + productAttributes.kcal + '</li>');
-            attributesList.append('<li>Protein: ' + productAttributes.protein + '</li>');
-            attributesList.append('<li>Carbs: ' + productAttributes.carbs + '</li>');
-            attributesList.append('<li>Fat: ' + productAttributes.fat + '</li>');
-            attributesList.append('<li>Grams: ' + productAttributes.grams + '</li>');
-            // Add more attributes as needed
 
-            productAttributesDiv.append(attributesList);
+            $.ajax({
+                url: '/Meal/UpdateSummary',
+                dataType: 'json',
+                success: function (updatedSummary) {
+                    updateMealSummary(updatedSummary)
+                },
+                error: function (innerError) {
+                    console.error('Inner request error:', innerError);
+                }
+            });
         },
     });
+
+
+    function updateMealSummary(updatedSummary) {
+        $('#TotalKcal').text(updatedSummary.totalKcal);
+        $('#TotalProtein').text(updatedSummary.totalProtein);
+        $('#TotalCarbs').text(updatedSummary.totalCarbs);
+        $('#TotalFat').text(updatedSummary.totalFat);
+        $('#TotalGrams').text(updatedSummary.totalGrams);
+    }
 });
