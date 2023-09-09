@@ -37,7 +37,9 @@
     });
 
 
-    function updateMealSummary(updatedSummary) {
+    
+    function updateMealSummary(updatedSummary)
+    {
         $('#TotalKcal').text(updatedSummary.totalKcal);
         $('#TotalProtein').text(updatedSummary.totalProtein);
         $('#TotalCarbs').text(updatedSummary.totalCarbs);

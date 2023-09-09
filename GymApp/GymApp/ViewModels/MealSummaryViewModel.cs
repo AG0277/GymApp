@@ -14,15 +14,15 @@ namespace GymApp.ViewModels
             TotalGrams = 0f;
         }
         [Range(0f, float.MaxValue, ErrorMessage = "Kcal must be positive")]
-        public float? TotalKcal { get; set; }
+        public float TotalKcal { get; set; }
         [Range(0f, float.MaxValue, ErrorMessage = "Proteins must be positive")]
-        public float? TotalProtein { get; set; }
+        public float TotalProtein { get; set; }
         [Range(0f, float.MaxValue, ErrorMessage = "Carbs must be positive")]
-        public float? TotalCarbs { get; set; }
+        public float TotalCarbs { get; set; }
         [Range(0f, float.MaxValue, ErrorMessage = "Fat must be positive")]
-        public float? TotalFat { get; set; }
+        public float TotalFat { get; set; }
         [Range(0f, float.MaxValue, ErrorMessage = "Grams must be positive")]
-        public float? TotalGrams { get; set; }
+        public float TotalGrams { get; set; }
 
         public void AddProduct(Product product)
         {

@@ -1,12 +1,31 @@
-﻿@model List<Product>
+﻿@model Meal
 @{
     ViewData["Title"] = "Dynamic Autocomplete Search";
 }
+<style>
+    #headerText {
+        text-transform: none;
+    }
+</style>
 
-<div id="searchBar">
-    <input type="text" id="searchInput" placeholder="Search products..." />
-    <div id="searchResults"></div>
-</div>
+<form method="post">
+<container>
+    <div class="row">
+        <div class="col-2" id="searchBar">
+            <input type="text" id="searchInput" placeholder="Search products..." />
+            <div id="searchResults"></div>
+        </div>
+
+        <div class="col-2">
+                <input asp-for="MealName" id="mealName" type="text" style="width:150px" placeholder="Meal name..." />
+                <span asp-validation-for="MealName" class="text-danger"></span>
+        </div>
+        <div class="col-8">
+            <h1 id="headerText"></h1>
+        </div>
+    </div>
+</container>
+
 <div id="productAttributes"></div>
 
     <table class="table table-bordered table-striped">
@@ -49,10 +68,13 @@
     </tfoot>
     </table>
 
-<button type="submit" class="btn btn-primary" style="width:150px">Confirm</button>
+    <button type="submit" class="btn btn-primary" style="width:150px">Confirm</button>
+    </form>
    
 @section Scripts {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/js/DisplaySessionMeals.js"></script>
 <script src="~/js/SearchBar.js"></script>
 <script src="~/js/productDetails.js"></script>
+<script src="~/js/MealNameHeaderText.js"></script>
 }

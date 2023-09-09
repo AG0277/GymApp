@@ -28,7 +28,7 @@ namespace GymApp.Controllers
             _MealSummaryVM = new MealSummaryViewModel();
 
 
-            var serializedMealProduct = _httpContextAccessor.HttpContext.Session.GetString("MealProduct");
+            var serializedMealProduct = _httpContextAccessor.HttpContext.Session.GetString("MealProducts");
             if (!string.IsNullOrEmpty(serializedMealProduct))
             {
                 MealProductsVM = JsonConvert.DeserializeObject<List<MealProductViewModel>>(serializedMealProduct);
@@ -75,6 +75,16 @@ namespace GymApp.Controllers
             return Json(productAttributes);
         }
 
+        public IActionResult GetSelectedProducts()
+        {
+            var listOfSessionProducts = new List<Product>();
+            foreach(var obj in MealProductsVM) 
+            {
+                var product = _db.Products.FirstOrDefault(p => p.ProductId == obj.ProductId);
+                listOfSessionProducts.Add(product);
+            }
+            return Json(listOfSessionProducts);
+        }
         public IActionResult UpdateSummary()
         {
             return Json(_MealSummaryVM);
@@ -93,15 +103,13 @@ namespace GymApp.Controllers
 
         public IActionResult Create()
         {
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-            ViewData["MealSummary"] = serializer.Serialize(_MealSummaryVM);
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(Meal obj)
         {
-
+           
             var user = await _userManager.GetUserAsync(User);
             if (user != null)
             {
@@ -110,10 +118,25 @@ namespace GymApp.Controllers
                 ModelState.Remove("MealId");
             }
             obj.date = DateTime.Now;
+            obj.protein = _MealSummaryVM.TotalProtein;
+            obj.kcal = _MealSummaryVM.TotalKcal;
+            obj.fat = _MealSummaryVM.TotalFat;
+            obj.carbs = _MealSummaryVM.TotalCarbs;
+            obj.grams = _MealSummaryVM.TotalGrams;
 
             if (ModelState.IsValid)
             {
                 _db.Meals.Add(obj);
+                _db.SaveChanges();
+
+                foreach(var objMealProductsVM in MealProductsVM)
+                {
+                    var MealProduct = new MealProduct();
+                    MealProduct.ProductId = objMealProductsVM.ProductId;
+                    MealProduct.ProductGrams = objMealProductsVM.ProductGrams;
+                    MealProduct.MealId = obj.MealId;
+                    _db.MealProducts.Add(MealProduct);
+                }
                 _db.SaveChanges();
                 return RedirectToAction("Index", "Meal");
             }
