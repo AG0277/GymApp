@@ -154,5 +154,35 @@ namespace GymApp.Controllers
 
             return View();
         }
+        public async Task<IActionResult> Delete(string MealId)
+        {
+
+            DeleteMealViewModel DeleteMealVM = new DeleteMealViewModel();
+
+
+            Meal? mealdb = new Meal();
+            mealdb = await _db.Meals.FindAsync(MealId);
+            if (mealdb != null)
+            {
+                DeleteMealVM.mealSummary.AddMeal(mealdb);
+                DeleteMealVM.MealName=mealdb.MealName;
+            }
+            else
+                return NotFound();
+
+
+            List<MealProduct> matchingMealProducts = await _db.MealProducts
+                .Where(mp => mp.MealId == MealId)
+                .ToListAsync();
+
+            for (var i = 0; i < matchingMealProducts.Count; i++)
+            {
+                var product = await _db.Products.FindAsync(matchingMealProducts.ElementAt(i).ProductId);
+                DeleteMealVM.products.Add(product);
+            }
+
+                return View(DeleteMealVM);
+        }
     }
+
 }

@@ -32,5 +32,14 @@ namespace GymApp.ViewModels
             TotalFat += product.fat;
             TotalGrams += product.grams;
         }
+
+        public void AddMeal(Meal meal)
+        {
+            TotalKcal += meal.kcal;
+            TotalProtein += meal.protein;
+            TotalCarbs += meal.carbs;
+            TotalFat += meal.fat;
+            TotalGrams += meal.grams;
+        }
     }
 }
