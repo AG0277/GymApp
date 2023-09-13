@@ -36,6 +36,11 @@ namespace GymApp.Data
                 .HasOne(p => p.Product)
                 .WithMany(mp => mp.MealProducts)
                 .HasForeignKey(p => p.ProductId);
+
+            modelBuilder.Entity<Meal>()
+                .HasMany(m => m.MealProducts)
+                .WithOne(mp => mp.Meal)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

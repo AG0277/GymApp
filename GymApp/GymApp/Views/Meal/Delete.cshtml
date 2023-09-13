@@ -58,10 +58,10 @@
                         @Model.mealSummary.TotalProtein
                     </td>
                     <td>
-                        @Model.mealSummary.TotalFat
+                        @Model.mealSummary.TotalCarbs
                     </td>
                     <td>
-                        @Model.mealSummary.TotalCarbs
+                        @Model.mealSummary.TotalFat
                     </td>
                     <td>
                         @Model.mealSummary.TotalGrams
@@ -74,6 +74,6 @@
 
 
         <button type="submit" class="btn btn-danger" style="width:150px" >Delete</button>
-        <a asp-controller="Product" asp-action="Index" class="btn btn-primary">Back to the list</a>
+        <a asp-controller="Meal" asp-action="Index" class="btn btn-primary">Back to the list</a>
     </div>
 </form>

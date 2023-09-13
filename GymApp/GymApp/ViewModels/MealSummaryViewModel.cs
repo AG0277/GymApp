@@ -32,6 +32,14 @@ namespace GymApp.ViewModels
             TotalFat += product.fat;
             TotalGrams += product.grams;
         }
+        public void SubtractProduct(Product product)
+        {
+            TotalKcal -= product.kcal;
+            TotalProtein -= product.protein;
+            TotalCarbs -= product.carbs;
+            TotalFat -= product.fat;
+            TotalGrams -= product.grams;
+        }
 
         public void AddMeal(Meal meal)
         {

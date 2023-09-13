@@ -6,8 +6,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Nancy;
 using Nancy.Json;
+using Nancy.Routing.Trie;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Linq;
+using System.Text.Json.Nodes;
 
 namespace GymApp.Controllers
 {
@@ -129,7 +134,29 @@ namespace GymApp.Controllers
                 _db.Meals.Add(obj);
                 _db.SaveChanges();
 
-                foreach(var objMealProductsVM in MealProductsVM)
+                Dictionary<string, float> checkForDuplicates = new Dictionary<string, float>();
+                List<MealProductViewModel> itemsToRemove = new List<MealProductViewModel>();
+                foreach (var objMealProductsVM in MealProductsVM)
+                {
+                    if (!checkForDuplicates.ContainsKey(objMealProductsVM.ProductId))
+                        checkForDuplicates.Add(objMealProductsVM.ProductId, objMealProductsVM.ProductGrams);
+                    else
+                    {
+                        itemsToRemove.Add(objMealProductsVM);
+                        for (var i = 0; i < MealProductsVM.Count(); i++)
+                            if (MealProductsVM.ElementAt(i).ProductId == objMealProductsVM.ProductId)
+                            {
+                                MealProductsVM.ElementAt(i).ProductGrams += objMealProductsVM.ProductGrams;
+                            }
+                    }
+                }
+
+                foreach (var itemToRemove in itemsToRemove)
+                {
+                    MealProductsVM.Remove(itemToRemove);
+                }
+
+                foreach (var objMealProductsVM in MealProductsVM)
                 {
                     var MealProduct = new MealProduct();
                     MealProduct.ProductId = objMealProductsVM.ProductId;
@@ -140,18 +167,6 @@ namespace GymApp.Controllers
                 _db.SaveChanges();
                 return RedirectToAction("Index", "Meal");
             }
-            else
-            {
-                foreach (var err in ModelState.Keys)
-                {
-                    var error = ModelState[err].Errors;
-                    foreach(var errormessage in error)
-                    {
-                        string er = errormessage.ErrorMessage;
-                    }
-                }
-            }
-
             return View();
         }
         public async Task<IActionResult> Delete(string MealId)
@@ -178,10 +193,54 @@ namespace GymApp.Controllers
             for (var i = 0; i < matchingMealProducts.Count; i++)
             {
                 var product = await _db.Products.FindAsync(matchingMealProducts.ElementAt(i).ProductId);
+                var productRatio = matchingMealProducts.ElementAt(i).ProductGrams / product.grams;
+                product.kcal *= productRatio;
+                product.protein *= productRatio;
+                product.carbs *= productRatio;
+                product.fat *= productRatio;
+                product.grams *= productRatio;
                 DeleteMealVM.products.Add(product);
             }
 
                 return View(DeleteMealVM);
+        }
+        [HttpPost]
+        public  IActionResult DeleteProduct(string jsonData)
+        {
+            try
+            {
+                JObject json = JObject.Parse(jsonData);
+                Product product = json.ToObject<Product>();
+                MealProductViewModel mp = new MealProductViewModel();
+                for (int i = 0; i < MealProductsVM.Count(); i++)
+                {
+                    if (MealProductsVM[i].ProductId == product.ProductId)
+                        mp = MealProductsVM.ElementAt(i);
+                }
+                MealProductsVM.Remove(mp);
+                _MealSummaryVM.SubtractProduct(product);
+
+                var serializedMealSummary = JsonConvert.SerializeObject(_MealSummaryVM);
+                _httpContextAccessor.HttpContext.Session.SetString("MealSummary", serializedMealSummary);
+
+                var serializedMealProducts = JsonConvert.SerializeObject(MealProductsVM);
+                _httpContextAccessor.HttpContext.Session.SetString("MealProducts", serializedMealProducts);
+
+                return Json(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to delete product");
+                return Json(false);
+            }
+        }
+
+        [HttpPost]
+        public  IActionResult Delete(Meal meal)
+        {
+            _db.Meals.Remove(meal);
+            _db.SaveChanges();
+            return RedirectToAction("Index", "Meal");
         }
     }
 
