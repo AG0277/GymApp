@@ -242,6 +242,12 @@ namespace GymApp.Controllers
             _db.SaveChanges();
             return RedirectToAction("Index", "Meal");
         }
+
+        public IActionResult EditProduct(string rowId)
+        {
+
+            return View();
+        }
     }
 
 }

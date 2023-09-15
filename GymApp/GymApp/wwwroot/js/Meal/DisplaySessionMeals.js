@@ -1,4 +1,5 @@
-﻿$(document).ready(function () {
+﻿import { DeleteProduct, UpdateMealSummary } from './UpdateMealSummaryAndDeleteProduct.js';
+$(document).ready(function () {
     $.ajax({
         url: '/Meal/GetSelectedProducts',
         dataType: 'json',
@@ -26,16 +27,10 @@
 
                 (function (currentJsonData, currentRowId) {
                     $iconLink.on('click', function () {
-                        $.ajax({
-                            type: "POST",
-                            url: '/Meal/DeleteProduct?jsonData=' + currentJsonData,
-                            data: { jsonData: currentJsonData },
-                            dataType: 'json',
-                            success: function () {
-                                document.getElementById(currentRowId).remove();
+                        DeleteProduct(currentJsonData, currentRowId)
+                            .then(function () {
                                 UpdateMealSummary();
-                            },
-                        });
+                            })
                     });
                 })(jsonData, rowId); 
 
@@ -44,20 +39,4 @@
             }
         },
     });
-    function UpdateMealSummary() {
-        $.ajax({
-            url: '/Meal/UpdateSummary',
-            dataType: 'json',
-            success: function (updatedSummary) {
-                $('#TotalKcal').text(updatedSummary.totalKcal);
-                $('#TotalProtein').text(updatedSummary.totalProtein);
-                $('#TotalCarbs').text(updatedSummary.totalCarbs);
-                $('#TotalFat').text(updatedSummary.totalFat);
-                $('#TotalGrams').text(updatedSummary.totalGrams);
-            },
-            error: function (innerError) {
-                console.error('Inner request error:', innerError);
-            }
-        });
-    }
 });

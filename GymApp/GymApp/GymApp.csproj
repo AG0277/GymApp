@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\js\SearchBar.js" />
+    <None Include="wwwroot\js\Meal\SearchBar.js" />
   </ItemGroup>
 
   <ItemGroup>
