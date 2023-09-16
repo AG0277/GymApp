@@ -69,13 +69,10 @@
     </tfoot>
     </table>
 
-    <button type="submit" class="btn btn-primary" style="width:150px">Confirm</button>
+    <button id="submitButton" type="submit" class="btn btn-primary" style="width:150px">Confirm</button>
     <a asp-controller="Meal" asp-action="Index" class="btn btn-primary">Back to the list</a>
     <a asp-controller="Meal" id="adas"asp-action="DeleteProduct" class="icon - link">
         <i class="bi bi - trash3 - fill icon - size"></i>
-    </a>
-    <a asp-controller="Meal" asp-action="EditProduct" class="icon-link">
-        <i class="bi bi-pencil-square icon-size"></i>
     </a>
     </form>
    
@@ -86,6 +83,7 @@
 <script type="module"  src="~/js/Meal/DisplaySessionMeals.js"></script>
 <script type="module"  src="~/js/Meal/productDetails.js"></script>
 <script src="~/js/Meal/MealNameHeaderText.js"></script>
+<script src="~/js/Meal/PreventDefaultEnterBehaviour.js"></script>
 
 
 }

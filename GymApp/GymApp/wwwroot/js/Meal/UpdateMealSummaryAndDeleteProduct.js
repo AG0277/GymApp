@@ -48,3 +48,33 @@ export function EditProduct(jsonData, rowId) {
         }
     })
 }
+
+export function EditIcon($EditIconLink) {
+    $EditIconLink.on('click', function () {
+        var row = $(this).closest('tr');
+
+        var fifthTd = $(row).find('td:eq(5)');
+        var currentText = fifthTd.text();
+        var columnWidth = '10%';
+        fifthTd.css('width', columnWidth);
+
+        var inputElement = $('<input>', {
+            type: 'text',
+            value: currentText,
+            style: 'width:100%'
+        });
+
+        fifthTd.html(inputElement);
+        inputElement.focus();
+        inputElement.keyup(function (event) {
+            if (event.key === 'Enter') {
+                inputElement.blur();
+            }
+        });
+        inputElement.blur(function () {
+            var newValue = inputElement.val();
+
+            fifthTd.text(newValue);
+        });
+    });
+}

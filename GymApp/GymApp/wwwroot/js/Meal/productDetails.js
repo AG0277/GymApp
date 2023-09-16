@@ -1,4 +1,4 @@
-﻿import { DeleteProduct, UpdateMealSummary, EditProduct } from './UpdateMealSummaryAndDeleteProduct.js';
+﻿import { DeleteProduct, UpdateMealSummary, EditProduct, EditIcon } from './UpdateMealSummaryAndDeleteProduct.js';
 
 $(document).on('click', '#searchResults a', function (e) {
     e.preventDefault();
@@ -49,30 +49,7 @@ $(document).on('click', '#searchResults a', function (e) {
                     UpdateMealSummary();
                 })
             });
-
-            $EditIconLink.on('click', function () {
-                var row = document.getElementById(rowId);
-
-                var fifthTd = $(row).find('td:eq(5)');
-                var currentText = fifthTd.text();
-                var columnWidth = '10%';
-
-                fifthTd.css('width', columnWidth);
-
-                var inputElement = $('<input>', {
-                    type: 'text',
-                    value: currentText,
-                    style: 'width:100%'
-                });
-
-                fifthTd.html(inputElement);
-                inputElement.focus();
-                inputElement.blur(function () {
-                    var newValue = inputElement.val();
-
-                    fifthTd.text(newValue);
-                });
-            });
+            EditIcon($EditIconLink);
             $('#ProductTable').append(row);
             UpdateMealSummary();
         },

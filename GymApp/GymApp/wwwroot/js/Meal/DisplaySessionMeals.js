@@ -1,4 +1,4 @@
-﻿import { DeleteProduct, UpdateMealSummary } from './UpdateMealSummaryAndDeleteProduct.js';
+﻿import { DeleteProduct, UpdateMealSummary, EditIcon } from './UpdateMealSummaryAndDeleteProduct.js';
 $(document).ready(function () {
     $.ajax({
         url: '/Meal/GetSelectedProducts',
@@ -21,10 +21,19 @@ $(document).ready(function () {
                     class: 'icon-link',
                     'data-product-attributes': jsonData
                 }).html('<i class="bi bi-trash3-fill icon-size"></i>');
+                var $EditIconLink = $('<a>', {
+                    href: 'javascript:void(0)',
+                    class: 'icon-link',
+                    'data-product-attributes': jsonData
+                }).html('<i class="bi bi-pencil-square icon-size"></i>');
 
                 var $td = $('<td>').append($iconLink);
+                var $td1 = $('<td>').append($EditIconLink);
+
+                $(row).append($td1);
                 $(row).append($td);
 
+                EditIcon($EditIconLink);
                 (function (currentJsonData, currentRowId) {
                     $iconLink.on('click', function () {
                         DeleteProduct(currentJsonData, currentRowId)
