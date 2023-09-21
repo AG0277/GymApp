@@ -18,11 +18,11 @@ export function UpdateMealSummary() {
         url: '/Meal/UpdateSummary',
         dataType: 'json',
         success: function (updatedSummary) {
-            $('#TotalKcal').text(updatedSummary.totalKcal);
-            $('#TotalProtein').text(updatedSummary.totalProtein);
-            $('#TotalCarbs').text(updatedSummary.totalCarbs);
-            $('#TotalFat').text(updatedSummary.totalFat);
-            $('#TotalGrams').text(updatedSummary.totalGrams);
+            $('#TotalKcal').text(updatedSummary.totalKcal.toFixed(1));
+            $('#TotalProtein').text(updatedSummary.totalProtein.toFixed(1));
+            $('#TotalCarbs').text(updatedSummary.totalCarbs.toFixed(1));
+            $('#TotalFat').text(updatedSummary.totalFat.toFixed(1));
+            $('#TotalGrams').text(updatedSummary.totalGrams.toFixed(1));
         },
         error: function (innerError) {
             console.error('Inner request error:', innerError);
@@ -72,9 +72,34 @@ export function EditIcon($EditIconLink) {
             }
         });
         inputElement.blur(function () {
+            var oldValue = currentText;
             var newValue = inputElement.val();
-
+            var productAttributes = $EditIconLink.data('product-attributes');
             fifthTd.text(newValue);
+            EditUpdateProduct(productAttributes, newValue, row,  oldValue)
+                .then(function () {
+                    UpdateMealSummary();
+            })
         });
+    });
+}
+
+function EditUpdateProduct(productAttributes, newValue, row, oldValue) {
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            type: 'POST',
+            url: '/Meal/UpdateEditProduct',
+            data: JSON.stringify({ productAttributes: productAttributes, newValue: newValue, oldValue: oldValue }),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (response) {
+                var columnIndexToReplace = [1, 2, 3, 4];
+                var newProduct = [response.kcal, response.protein, response.carbs, response.fat, response.grams];
+                $.each(columnIndexToReplace, function (index, columnIndex) {
+                    row.find('td:eq(' + columnIndex + ')').text(newProduct[index].toFixed(1));
+                });
+                resolve();
+            }
+        })
     });
 }

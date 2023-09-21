@@ -18,11 +18,11 @@ $(document).on('click', '#searchResults a', function (e) {
             var rowId = productAttributes.productId + productAttributes.totalGrams;
             var row = $('<tr id =' + rowId + ' > ');
             row.append('<td>' + productAttributes.productName + '</td>');
-            row.append('<td>' + productAttributes.kcal + '</td>');
-            row.append('<td>' + productAttributes.protein + '</td>');
-            row.append('<td>' + productAttributes.carbs + '</td>');
-            row.append('<td>' + productAttributes.fat + '</td>');
-            row.append('<td>' + productAttributes.grams + '</td>');
+            row.append('<td>' + productAttributes.kcal.toFixed(1) + '</td>');
+            row.append('<td>' + productAttributes.protein.toFixed(1) + '</td>');
+            row.append('<td>' + productAttributes.carbs.toFixed(1) + '</td>');
+            row.append('<td>' + productAttributes.fat.toFixed(1) + '</td>');
+            row.append('<td>' + productAttributes.grams.toFixed(1) + '</td>');
 
             var jsonData = JSON.stringify(productAttributes);
 

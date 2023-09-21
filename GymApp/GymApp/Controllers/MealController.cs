@@ -1,12 +1,14 @@
 ﻿using GymApp.Data;
 using GymApp.Models;
 using GymApp.ViewModels;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Nancy;
+using Nancy.Diagnostics;
 using Nancy.Json;
 using Nancy.Routing.Trie;
 using Newtonsoft.Json;
@@ -80,13 +82,34 @@ namespace GymApp.Controllers
             return Json(productAttributes);
         }
 
+
         public IActionResult GetSelectedProducts()
         {
             var listOfSessionProducts = new List<Product>();
             foreach(var obj in MealProductsVM) 
             {
-                var product = _db.Products.FirstOrDefault(p => p.ProductId == obj.ProductId);
-                listOfSessionProducts.Add(product);
+                Product productdb = _db.Products.FirstOrDefault(p => p.ProductId == obj.ProductId);
+                if (productdb != null)
+                {
+                    Product product = new Product
+                    {
+                        ProductId = productdb.ProductId,
+                        ProductName = productdb.ProductName,
+                        kcal = productdb.kcal,
+                        protein = productdb.protein,
+                        carbs = productdb.carbs,
+                        fat = productdb.fat,
+                        grams = productdb.fat,
+                        MealProducts = productdb.MealProducts,
+                    };
+                    var productRatio = obj.ProductGrams / product.grams;
+                    product.kcal *= productRatio;
+                    product.protein *= productRatio;
+                    product.carbs *= productRatio;
+                    product.fat *= productRatio;
+                    product.grams *= productRatio;
+                    listOfSessionProducts.Add(product);
+                }
             }
             return Json(listOfSessionProducts);
         }
@@ -217,6 +240,7 @@ namespace GymApp.Controllers
                     if (MealProductsVM[i].ProductId == product.ProductId)
                         mp = MealProductsVM.ElementAt(i);
                 }
+
                 MealProductsVM.Remove(mp);
                 _MealSummaryVM.SubtractProduct(product);
 
@@ -242,11 +266,49 @@ namespace GymApp.Controllers
             _db.SaveChanges();
             return RedirectToAction("Index", "Meal");
         }
-
-        public IActionResult EditProduct(string rowId)
+        [HttpPost]
+        public IActionResult UpdateEditProduct([FromBody] dynamic data)
         {
+            string jsonData = data.ToString();
 
-            return View();
+            JObject jsonObject = JObject.Parse(jsonData);
+
+            Product product = jsonObject["productAttributes"].ToObject<Product>();
+            Product newProduct = jsonObject["productAttributes"].ToObject<Product>();
+            var newGrams = jsonObject["newValue"].ToObject<float>();
+            var oldGrams = jsonObject["oldValue"].ToObject<float>();
+
+            MealProductViewModel mp = new MealProductViewModel();
+            for (int i = 0; i < MealProductsVM.Count(); i++)
+            {
+                if (MealProductsVM[i].ProductId == product.ProductId && MealProductsVM[i].ProductGrams == oldGrams)
+                {
+                    MealProductsVM.ElementAt(i).ProductGrams = newGrams;
+                    break;
+                }
+            }
+            var oldRatio = product.grams / oldGrams;
+            var newRatio = product.grams / newGrams;
+            product.kcal /= oldRatio;
+            product.protein /= oldRatio;
+            product.carbs /= oldRatio;
+            product.fat /= oldRatio;
+            product.grams /= oldRatio;
+            _MealSummaryVM.SubtractProduct(product);
+            newProduct.kcal /= newRatio;
+            newProduct.protein /= newRatio;
+            newProduct.carbs /= newRatio;
+            newProduct.fat /= newRatio;
+            newProduct.grams = newGrams;
+            _MealSummaryVM.AddProduct(newProduct);
+
+            var serializedMealSummary = JsonConvert.SerializeObject(_MealSummaryVM);
+            _httpContextAccessor.HttpContext.Session.SetString("MealSummary", serializedMealSummary);
+
+            var serializedMealProducts = JsonConvert.SerializeObject(MealProductsVM);
+            _httpContextAccessor.HttpContext.Session.SetString("MealProducts", serializedMealProducts);
+
+            return Json(newProduct);
         }
     }
 

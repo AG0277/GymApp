@@ -8,11 +8,11 @@ $(document).ready(function () {
                 var rowId = result[i].productId + result[i].grams;
                 var row = $('<tr id =' + rowId + ' > ');
                 row.append('<td>' + result[i].productName + '</td>');
-                row.append('<td>' + result[i].kcal + '</td>');
-                row.append('<td>' + result[i].protein + '</td>');
-                row.append('<td>' + result[i].carbs + '</td>');
-                row.append('<td>' + result[i].fat + '</td>');
-                row.append('<td>' + result[i].grams + '</td>');
+                row.append('<td>' + result[i].kcal.toFixed(1) + '</td>');
+                row.append('<td>' + result[i].protein.toFixed(1) + '</td>');
+                row.append('<td>' + result[i].carbs.toFixed(1) + '</td>');
+                row.append('<td>' + result[i].fat.toFixed(1) + '</td>');
+                row.append('<td>' + result[i].grams.toFixed(1) + '</td>');
 
                 var jsonData = JSON.stringify(result[i]);
 
