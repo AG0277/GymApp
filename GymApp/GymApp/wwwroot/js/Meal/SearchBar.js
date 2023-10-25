@@ -10,7 +10,6 @@
                 success: function (data) {
                     var resultsDiv = $('#searchResults');
                     resultsDiv.empty();
-
                     if (data.length > 0) {
                         var ul = $('<ul>');
                         $.each(data, function (index, item) {

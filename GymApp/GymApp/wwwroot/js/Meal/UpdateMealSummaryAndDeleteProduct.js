@@ -13,6 +13,24 @@
     });
 }
 
+export function DeleteEditProduct(jsonData, rowId) {
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            type: "POST",
+            url: '/Meal/DeleteProductAtEditViewModel?jsonData=' + jsonData,
+            data: { jsonData: jsonData },
+            dataType: 'json',
+            success: function () {
+                document.getElementById(rowId).remove();
+                resolve();
+            },
+            error: function (innerError) {
+                console.error('Inner request error:', innerError);
+            }
+               
+        });
+    });
+}
 export function UpdateMealSummary() {
     $.ajax({
         url: '/Meal/UpdateSummary',
@@ -23,6 +41,23 @@ export function UpdateMealSummary() {
             $('#TotalCarbs').text(updatedSummary.totalCarbs.toFixed(1));
             $('#TotalFat').text(updatedSummary.totalFat.toFixed(1));
             $('#TotalGrams').text(updatedSummary.totalGrams.toFixed(1));
+        },
+        error: function (innerError) {
+            console.error('Inner request error:', innerError);
+        }
+    });
+}
+
+export function UpdateEditMealSummary() {
+    $.ajax({
+        url: '/Meal/UpdateEditSummary',
+        dataType: 'json',
+        success: function (UpdatedSummary) {
+            $('#TotalKcal').text(UpdatedSummary.meal.kcal.toFixed(1));
+            $('#TotalProtein').text(UpdatedSummary.meal.protein.toFixed(1));
+            $('#TotalCarbs').text(UpdatedSummary.meal.carbs.toFixed(1));
+            $('#TotalFat').text(UpdatedSummary.meal.fat.toFixed(1));
+            $('#TotalGrams').text(UpdatedSummary.meal.grams.toFixed(1));
         },
         error: function (innerError) {
             console.error('Inner request error:', innerError);
@@ -54,7 +89,7 @@ export function EditIcon($EditIconLink) {
         var row = $(this).closest('tr');
 
         var fifthTd = $(row).find('td:eq(5)');
-        var currentText = fifthTd.text();
+        var currentText = fifthTd.text().trim();
         var columnWidth = '10%';
         fifthTd.css('width', columnWidth);
 
@@ -84,11 +119,66 @@ export function EditIcon($EditIconLink) {
     });
 }
 
+export function EditEditIcon($EditIconLink) {
+    $EditIconLink.on('click', function () {
+        var row = $(this).closest('tr');
+
+        var fifthTd = $(row).find('td:eq(5)');
+        var currentText = fifthTd.text().trim();
+        var columnWidth = '10%';
+        fifthTd.css('width', columnWidth);
+
+        var inputElement = $('<input>', {
+            type: 'text',
+            value: currentText,
+            style: 'width:100%'
+        });
+
+        fifthTd.html(inputElement);
+        inputElement.focus();
+        inputElement.keyup(function (event) {
+            if (event.key === 'Enter') {
+                inputElement.blur();
+            }
+        });
+        inputElement.blur(function () {
+            var oldValue = currentText;
+            var newValue = inputElement.val();
+            var productAttributes = $EditIconLink.data('product-attributes');
+            fifthTd.text(newValue);
+            EditEditUpdateProduct(productAttributes, newValue, row, oldValue)
+                .then(function () {
+                    UpdateEditMealSummary();
+                })
+        });
+    });
+}
+
 function EditUpdateProduct(productAttributes, newValue, row, oldValue) {
     return new Promise(function (resolve, reject) {
         $.ajax({
             type: 'POST',
             url: '/Meal/UpdateEditProduct',
+            data: JSON.stringify({ productAttributes: productAttributes, newValue: newValue, oldValue: oldValue }),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (response) {
+                var columnIndexToReplace = [1, 2, 3, 4];
+                var newProduct = [response.kcal, response.protein, response.carbs, response.fat, response.grams];
+                $.each(columnIndexToReplace, function (index, columnIndex) {
+                    row.find('td:eq(' + columnIndex + ')').text(newProduct[index].toFixed(1));
+                });
+                resolve();
+            }
+        })
+    });
+}
+
+function EditEditUpdateProduct(productAttributes, newValue, row, oldValue) {
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            type: 'POST',
+            url: '/Meal/UpdateEditEditProduct',
             data: JSON.stringify({ productAttributes: productAttributes, newValue: newValue, oldValue: oldValue }),
             contentType: 'application/json',
             dataType: 'json',

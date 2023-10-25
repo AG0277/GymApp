@@ -1,45 +1,124 @@
-﻿@model Product
+﻿@using GymApp.ViewModels
+@model EditMealViewModel
+
+@{
+    ViewData["Title"] = "Dynamic Autocomplete Search";
+}
+<style>
+    #headerText {
+        text-transform: none;
+    }
+
+    #editHeader {
+        text-transform: none;
+    }
+</style>
+<div style="clear: both">
+    <h2 id="editHeader" style="display:inline-block; margin-right: 10px;">Edit</h2>
+    <h2 id="headerText" style="display:inline-block;">@Model.Meal.MealName</h2>
+</div>
+
 
 <form method="post">
-    <input asp-for="ProductId" hidden />
-    <div class="border p-3 mt-4">
-        <div class="row">
-            <h2 class="text-primary">
-                Edit @Model.ProductName
-            </h2>
-            <hr />
+<container>
+    <div class="row">
+        <div class="col-2" id="searchBar">
+            <input type="text" id="searchInput" placeholder="Search products..." />
+            <div id="searchResults"></div>
         </div>
-        <div class="mb-3">
-            <label asp-for="ProductName"></label>
-            <input asp-for="ProductName" type="text" class="form-control" />
-            <span asp-validation-for="ProductName" class="text-danger"></span>
+
+        <div class="col-2">
+                <input asp-for="Meal.MealName" id="MealName" type="text" style="width:150px" placeholder="Meal name..." />
+                <span asp-validation-for="Meal.MealName" class="text-danger"></span>
         </div>
-        <div class="mb-3">
-            <label asp-for="kcal"></label>
-            <input asp-for="kcal" type="text" class="form-control" />
-            <span asp-validation-for="kcal" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="protein"></label>
-            <input asp-for="protein" type="text" class="form-control" />
-            <span asp-validation-for="protein" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="fat"></label>
-            <input asp-for="fat" type="text" class="form-control" />
-            <span asp-validation-for="fat" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="carbs"></label>
-            <input asp-for="carbs" type="text" class="form-control" />
-            <span asp-validation-for="carbs" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="grams"></label>
-            <input asp-for="grams" type="text" class="form-control" />
-            <span asp-validation-for="grams" class="text-danger"></span>
-        </div>
-        <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
-        <a asp-controller="Product" asp-action="Index" class="btn btn-primary">Back to the list</a>
     </div>
-</form>
+</container>
+
+
+<div id="productAttributes"></div>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Product Name
+                </th>
+                <th>
+                    kcal
+                </th>
+                <th>
+                    protein
+                </th>
+                <th>
+                    carbs
+                </th>
+                <th>
+                    fat
+                </th>
+                <th>
+                    grams
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="ProductTable">
+            @foreach(var obj in Model.products)
+            {
+                <tr id="@obj.ProductName+@obj.grams">
+                    <td>
+                        @obj.ProductName
+                    </td>
+                    <td>
+                        @obj.kcal
+                    </td>
+                    <td>
+                        @obj.protein
+                    </td>
+                    <td>
+                        @obj.carbs
+                    </td>
+                    <td>
+                        @obj.fat
+                    </td>
+                    <td>
+                        @obj.grams
+                    </td>
+                    <td>
+                        <i data-product='@Html.Raw(Json.Serialize(obj))'></i>
+                    </td>
+                    <td>
+                        <a asp-controller="Meal" asp-action="DeleteProductAtEditViewModelfromView" asp-route-ProductId="@obj.ProductId" class="icon-link">
+                            <i class="bi bi-trash3-fill icon-size"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    <tfoot>
+        <tr>
+            <th>Total</th>
+            <th><span id="TotalKcal">@Model.Meal.kcal</span></th>
+            <th><span id="TotalProtein">@Model.Meal.protein</span></th>
+            <th><span id="TotalCarbs">@Model.Meal.carbs</span></th>
+            <th><span id="TotalFat">@Model.Meal.fat</span></th>
+            <th><span id="TotalGrams">@Model.Meal.grams</span></th>
+                <th>
+                </th>
+        </tr>
+    </tfoot>
+    </table>
+
+    <button id="submitButton" type="submit" class="btn btn-primary" style="width:150px">Confirm</button>
+    <a asp-controller="Meal" asp-action="Index" class="btn btn-primary">Back to the list</a>
+    </form>
+   
+@section Scripts {
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/js/Meal/SearchBar.js"></script>
+<script type="module" src="~/js/Meal/AddIcon.js"></script>
+<script type="module" src="~/js/Meal/UpdateMealSummaryAndDeleteProduct.js"></script>
+<script type="module"  src="~/js/Meal/EditMealProductDetails.js"></script>
+<script src="~/js/Meal/MealNameHeaderText.js"></script>
+<script src="~/js/Meal/PreventDefaultEnterBehaviour.js"></script>
+}
+
